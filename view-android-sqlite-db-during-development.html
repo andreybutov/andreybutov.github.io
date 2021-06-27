@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="author" content="Andrey Butov">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<title>Andrey Butov | A quick way to view your Android app’s SQLite database during development.</title>
+
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,700">
+
+</head>
+
+
+<body>
+
+	<div class="navbar navbar-default navbar-static-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon icon-bar"></span>
+					<span class="icon icon-bar"></span>
+					<span class="icon icon-bar"></span>
+				</button>
+			</div>
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a style="border-bottom: none;" href="/">Portfolio</a></li>
+					<li><a style="border-bottom: none;" href="about.html">About</a></li>
+					<li><a style="border-bottom: none;" href="writing.html">Blog &amp; Articles</a></li>
+					<li><a style="border-bottom: none;" href="speaking.html">Speaking</a></li>
+					<li><a style="border-bottom:none; font-weight: 600;" href="mailto:andreybutov@antair.com">andreybutov@antair.com</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+	<section id="about">
+		<div class="container">
+			<div class="row">
+	
+				<div class="col-md-offset-1 col-md-10 col-sm-12">
+					<h2><strong>A quick way to view your Android app’s SQLite database during development.</h2>
+						<div class="blog-post-format">
+							<span><i class="fa fa-date"></i> Mar 14, 2013</span>
+						</div>
+	
+	
+						<div class="blog-post-des">
+							<p>
+								Often, when writing Android apps that store data in an SQLite database, I need to view the contents of that database to see if data was stored properly, etc.
+							</p>
+	
+							<p>With my current project, the schema needs to be fairly complex, and, at one point, I had to check up on what the database contained every few seconds.</p>
+	
+							<p>To make things easier, I chained together a few things with duct tape, chewing gum, and adb. I do my Android dev on a Mac, but you shouldn’t have much trouble adapting this little automation to other platforms.</p>
+	
+							<p>Download Navicat Lite. I’m not sure if Navicat still offers this download directly, but you can still find copies of it <a href="http://mac.softpedia.com/get/Internet-Utilities/Navicat-Lite.shtml">floating around the web</a>. If you have a copy of <a href="https://www.navicat.com/">Navicat Premium</a>, that should work as well.</p>
+	
+							<p>When installed, Navicat should associate itself as the default app to handle .sqlite files.</p>
+	
+							<p>Create a new shell script file, say, <strong>opendb.sh</strong>, with the following contents:</p>
+	
+							<div class="code">
+								#!/bin/bash<br>
+								adb pull /data/data/com.company.app/databases/appdbname ~/Desktop/mydbname.sqlite<br>
+								open ~/Desktop/mydbname.sqlite<br>
+							</div>
+	
+							<p>Replace <strong>com.company.app</strong>, with the package name of your Android app.</p>
+	
+							<p>Replace <strong>appdbname</strong> with the name of your SQLite database.</p>
+	
+							<p>It would make things easier if your <strong>adb</strong> binary is in your PATH. If it isn’t, use the full path to <strong>adb</strong> in the script.</p>
+	
+							<p>Your Android simulator should already be running, or your device already connected, for the <strong>adb</strong> pull to work.</p>
+	
+							<p>Run <strong>chmod +x opendb.sh</strong> to make the script executable.</p>
+	
+							<p>With that done, now, every time you need to take a quick look at the contents of the SQLite database for your app, just run this script. The database file will be pulled from the device/simulator, and automatically opened with Navicat.</p>
+	
+						</div>
+	
+	
+					</div>
+	
+				</div>
+			</div>
+		</section>
+	
+
+
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-sm-6">
+					<div class="footer-copyright">
+						<p>&copy; 2021 Andrey Butov</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script src="js/jquery.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

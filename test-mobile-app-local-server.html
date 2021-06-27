@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="author" content="Andrey Butov">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<title>Andrey Butov | Testing your mobile app against a server on the local network.</title>
+
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,700">
+
+</head>
+
+
+<body>
+
+	<div class="navbar navbar-default navbar-static-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon icon-bar"></span>
+					<span class="icon icon-bar"></span>
+					<span class="icon icon-bar"></span>
+				</button>
+			</div>
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a style="border-bottom: none;" href="/">Portfolio</a></li>
+					<li><a style="border-bottom: none;" href="about.html">About</a></li>
+					<li><a style="border-bottom: none;" href="writing.html">Blog &amp; Articles</a></li>
+					<li><a style="border-bottom: none;" href="speaking.html">Speaking</a></li>
+					<li><a style="border-bottom:none; font-weight: 600;" href="mailto:andreybutov@antair.com">andreybutov@antair.com</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+	<section id="about">
+		<div class="container">
+			 <div class="row">
+   
+				  <div class="col-md-offset-1 col-md-10 col-sm-12">
+					   <h2><strong>Testing your mobile app against a server on the local network.</h2>
+					   <div class="blog-post-format">
+						   <span><i class="fa fa-date"></i> Oct 24, 2013</span>
+					   </div>
+   
+   
+								<div class="blog-post-des">
+									 <p>
+   I often build mobile apps that have a web app counterpart. Typically, during development, the web app is running on some local machine, while the mobile app is being tested on a device.
+									 </p>
+   
+   
+									 <p>A common issue that arises with this setup is that the mobile app, being tested on a device, doesn’t know the host name of the machine where the local web app is running.</p>
+   
+									 <p>With web development, I would set up a <strong>hosts</strong> file on each machine, to let it know how to reach the other hosts. But with a mobile app, I can’t simply modify the hosts file on the device (well, you can, but you would need a jailbroken device).</p>
+   
+									 <p>There are various solutions to this, such as modifying your router settings, but I find it easier to just use an <strong>HTTP proxy</strong>.</p>
+   
+									 <p>Here is how I would test an iOS app, with a web app counterpart running on a local Windows machine named <strong>athena</strong>.</p>
+   
+									 <p>If I just run the web app on <strong>athena</strong>, and then run the iOS app on my iPhone, the iOS app would not be able to connect to the server running on <strong>athena</strong>, as the iPhone doesn’t know what or where <strong>athena</strong> is.</p>
+   
+									 <p>The idea here is to run an HTTP proxy on <strong>athena</strong>, and then have the iPhone route its network traffic through the HTTP proxy. Since the HTTP proxy runs on <strong>athena</strong>, it can read the hosts file on that machine, which has an entry pointing the name <strong>athena</strong> to something like 127.0.0.1. So, when the iPhone routes its network traffic through the proxy, the proxy can then resolve the name <strong>athena</strong>, and direct the request to the web app being served there.</p>
+   
+									 <p>It’s worth noting that the HTTP proxy does not need to run on the same machine as where the web app is running. The proxy can run on any local machine, as long as that machine has a hosts file with an entry for the location of the machine from which the web app is being served.</p>
+   
+									 <p>For Windows, the HTTP proxy I like to use is <a href="http://fiddler2.com/">Fiddler</a>.</p>
+   
+									 <p>After installing Fiddler, I go into options, and make sure "Act as system proxy on startup" is checked, and that "Allow remote computers to connect" is checked.</p>
+   
+									   <div style="text-align: center; margin-top:20px; margin-bottom:20px;">
+										   <img style="border-radius: 5px; border: 1px solid black;" src="img/fiddler1.png"/>
+										 </div>
+   
+										 <p>After that’s done, I go into the File menu and make sure "Capture traffic" is checked.</p>
+   
+										 <p>Fiddler is a great option on Windows. There are also great options for setting up local HTTP proxies on a Mac, such as the <a href="http://www.charlesproxy.com/">Charles HTTP proxy</a>.</p>
+   
+										 <p>Once my HTTP proxy is running, it’s time to configure the iPhone to use that proxy. I will need to know the IP address of the machine where the HTTP proxy is running. In my case, the proxy is running on <strong>athena</strong>, which has the local IP address of 192.168.1.11. The Fiddler proxy is listening on port 8888 (this can be seen in the Fiddler settings dialog).</p>
+   
+										 <p>On iOS 7, to set the proxy, I go into Settings, then, Wi-Fi, and select my Wi-Fi network. I scroll toward the bottom of that screen to find the section for HTTP PROXY. I click on "Manual", and enter the IP address (Server) and Port of the machine on which my HTTP proxy is running. I entered 192.168.1.11 for the Server, and 8888 for the Port.</p>
+   
+									   <div style="text-align: center; margin-top:20px; margin-bottom:20px;">
+										   <img style="border-radius: 5px; border: 1px solid black;" src="img/proxysettings.png"/>
+										 </div>
+   
+										 <p>That’s all. Now, when I run the mobile app on my iPhone, and the app wants to connect to the web app on <strong>athena</strong>, the network request is routed to the Fiddler HTTP proxy running on 192.168.1.11:8888, the proxy reads the hosts file, finds the entry for <strong>athena</strong>, and directs the traffic to the correct local machine.</p>
+   
+										 <p>This is an easy way to test your mobile apps against local web servers. Just don’t forget to disable the local HTTP PROXY setting on your iPhone before you leave the house!</p>
+   
+								   </div>
+   
+   
+				  </div>
+   
+			 </div>
+		</div>
+   </section>
+   
+
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-sm-6">
+					<div class="footer-copyright">
+						<p>&copy; 2021 Andrey Butov</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script src="js/jquery.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
